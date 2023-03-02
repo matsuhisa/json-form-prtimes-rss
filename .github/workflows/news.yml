@@ -49,6 +49,9 @@ jobs:
           git commit --author="$AUTHOR" -m "Update News"
           git log --oneline 
           git branch
+      - name: git push
+        run: |
+          git push origin -u update/news_${{ env.CURRENT_DATETIME }}
       - name: Create Release Pull Request
         run: |
           gh pr create -B main --title "Update News" --body "プルリクエストを作るテスト" --head update/news_${{ env.CURRENT_DATETIME }}
