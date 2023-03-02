@@ -21,6 +21,11 @@ jobs:
           node-version: "18"
       - name: print log
         run: echo "こんにちは"
+      - name: Set current datetime as env variable
+        env:
+          TZ: 'Asia/Tokyo'
+        run: echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
       - name: Install Libraries
         run: |
           echo `node -v`
@@ -28,3 +33,9 @@ jobs:
       - name: update news
         run: |
           node App.js
+      - name: Create branch
+        run: |
+          git switch -c update/news_${{ env.CURRENT_DATETIME }}
+      - name: Create Release Pull Request
+        run: |
+          gh pr create -B main --title "Update News" --body "プルリクエストを作るテスト" --head "foo"
