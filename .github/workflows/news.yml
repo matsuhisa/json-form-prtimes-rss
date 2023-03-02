@@ -25,3 +25,6 @@ jobs:
         run: |
           echo `node -v`
           npm install
+      - name: update news
+        run: |
+          node App.js
