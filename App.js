@@ -1,17 +1,25 @@
-let Parser = require('rss-parser');
 let Jsdom = require("jsdom");
-
+let Parser = require("rss-parser");
+let fs = require("fs");
 let parser = new Parser();
+
 const feedUrl = "https://prtimes.jp/companyrdf.php?company_id=25043"
 
 async function getRss() {
   let feed = await parser.parseURL(feedUrl);
-  console.log(feed.title);
+  // console.log(feed.title);
+  let releases = []
+
 
   feed.items.forEach(item => {
-    console.log("------------");
-    console.log(item.title);
-    console.log(item.link);
+    let date = new Date(item.date)
+    let release = {
+      "day": date.toLocaleDateString(),
+      "category": "プレスリリース",
+      "content": item.title,
+      "url": item.link,
+      "image": "",
+    }
     // fetch(item.link).then(res => {
     //   if(res.ok) {
     //     res.text().then(text => {
@@ -20,8 +28,12 @@ async function getRss() {
     //     })
     //   }
     // })
-    console.log("------------");
+    releases.push(release);
   })
+
+  let jsonData = JSON.stringify({news: releases}, null, "  ");
+  fs.writeFileSync("./data/news.json", jsonData);
+  // console.table(jsonData);
 }
 
 getRss();
