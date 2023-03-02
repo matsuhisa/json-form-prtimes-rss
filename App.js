@@ -12,19 +12,14 @@ async function getRss() {
     console.log("------------");
     console.log(item.title);
     console.log(item.link);
-
-    fetch(item.link).then(res => {
-      if(res.ok) {
-        res.text().then(text => {
-          const dom = new Jsdom.JSDOM(text);
-          console.log(dom.window.document.querySelector("meta[property='og:image']").content);
-        })
-        // const dom = new Jsdom.JSDOM(res.data);
-        // console.log(res.body);
-        // console.table(dom.window.document.querySelectorAll("head > meta"));
-        // console.log(dom.window.document.querySelector("meta[property='og:image']");
-      }
-    })
+    // fetch(item.link).then(res => {
+    //   if(res.ok) {
+    //     res.text().then(text => {
+    //       const dom = new Jsdom.JSDOM(text);
+    //       console.log(dom.window.document.querySelector("meta[property='og:image']").content);
+    //     })
+    //   }
+    // })
     console.log("------------");
   })
 }
