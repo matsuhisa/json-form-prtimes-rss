@@ -7,8 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
@@ -32,12 +30,25 @@ jobs:
         run: |
           echo `node -v`
           npm install
-      - name: update news
-        run: |
-          node App.js
       - name: Create branch
         run: |
           git switch -c update/news_${{ env.CURRENT_DATETIME }}
+      - name: update news
+        run: |
+          node App.js
+      - name: Set up Git user
+        run: |
+          git config user.email "${USERNAME}@users.noreply.github.com"
+          git config user.name "${USERNAME}"
+        env:
+          USERNAME: ${{ github.actor }}
+      - name: git commit
+        run: |
+          git add .
+          git commit --author="$AUTHOR" -m "Update News"
       - name: Create Release Pull Request
         run: |
-          gh pr create -B main --title "Update News" --body "プルリクエストを作るテスト" --head "foo"
+          gh pr create -B main --title "Update News" --body "プルリクエストを作るテスト" --head update/news_${{ env.CURRENT_DATETIME }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AUTHOR: ${{ github.event.pusher.name }}
