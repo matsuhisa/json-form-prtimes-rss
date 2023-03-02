@@ -33,7 +33,7 @@ async function getRss() {
 
   let jsonData = JSON.stringify({news: releases}, null, "  ");
   fs.writeFileSync("./data/news.json", jsonData);
-  // console.table(jsonData);
+  console.table(jsonData);
 }
 
 getRss();
