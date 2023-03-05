@@ -8,7 +8,7 @@ const main = async () => {
 
   const filename = ogImageUrl.match(".+/(.+?)([\?#;].*)?$")[1];
 
-  fs.writeFileSync(filename, buffer);
+  fs.writeFileSync(`./src/image/${filename}`, buffer);
 }
 
 main();
