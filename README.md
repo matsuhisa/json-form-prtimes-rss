@@ -32,4 +32,53 @@
 - Promise のネスト先も完了したことを確認したい
 
 
+### 正解
 
+- Promise オブジェクトを返す
+- Promise でも、undefined だと Promise.all は処理できない
+
+```javascript
+const targets = [
+  "https://httpstat.us/200",
+  "https://httpstat.us/201",
+  "https://httpstat.us/202",
+  "https://httpstat.us/203"
+];
+
+function returnHoge(target){
+  return fetch(target).then(result => result.text())
+}
+
+Promise.all(
+  targets.map(target => returnHoge(target))
+).then(results => {
+  console.table(results)
+  console.log("------ 処理終わり")
+});
+```
+
+```bash
+┌─────────┬─────────────────────────────────────┐
+│ (index) │               Values                │
+├─────────┼─────────────────────────────────────┤
+│    0    │              '200 OK'               │
+│    1    │            '201 Created'            │
+│    2    │           '202 Accepted'            │
+│    3    │ '203 Non-Authoritative Information' │
+└─────────┴─────────────────────────────────────┘
+------ 処理終わり
+```
+
+### だめな例
+
+```javascript
+function normalHoge(target){
+  fetch(target).then(result => result.text())
+}
+```
+
+```javascript
+async function asyncHoge(target){
+  fetch(target).then(result => result.text())
+}
+```
