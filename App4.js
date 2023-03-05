@@ -14,8 +14,14 @@ async function main() {
     urls.push(item.link);
   })
 
+  const urls2 = [
+    "https://prtimes.jp/main/html/rd/p/000000027.000025043.html",
+    "https://prtimes.jp/main/html/rd/p/000000208.000025043.html",
+    "https://prtimes.jp/main/html/rd/p/000000207.000025043.html",
+  ]
+
   console.log("------ 処理開始")
-  Promise.all(urls.map(url => getRelease(url))).then( results => {
+  Promise.all(urls2.map(url => getRelease(url))).then( results => {
     console.table(results)
     console.log("------ 処理終わり")
   })
@@ -29,9 +35,14 @@ function getRelease(url) {
       const imageUrl = dom.window.document.querySelector("meta[property='og:image']").content
       return imageUrl
     })
-    .then(imageUrl => {
-      const filename = getOgImage(imageUrl)
-      return filename;
+    .then(async imageUrl => {
+      const filename = await getOgImage(imageUrl)
+      let release = {
+        "category": "プレスリリース",
+        "url": url,
+        "image": filename,
+      }
+      return release;
     })
   })
 }
