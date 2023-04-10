@@ -40,7 +40,7 @@ function getRelease(item) {
         "category": "プレスリリース",
         "content": item.title,
         "url": url,
-        "image": filename,
+        "image": `${filename.replace(/\.[^/.]+$/, "")}.jpg`,
       }
       return release;
     })
@@ -52,7 +52,7 @@ async function getOgImage(imageUrl) {
   const arrayBuffer = await res.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const filename = imageUrl.match(".+/(.+?)([\?#;].*)?$")[1];
-  return fs.writeFile(`./src/image/${filename}`, buffer).then(() => {
+  return fs.writeFile(`./src/tmp/${filename}`, buffer).then(() => {
     console.log("画像 書き込み終わり");
     return filename;
   });

@@ -15,6 +15,8 @@ jobs:
         with:
           path: node_modules
           key: yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: set up ImageMagick Action
+        uses: jruipinto/ImageMagick-action@v1
       - name: set up node
         uses: actions/setup-node@v3
         with:
@@ -25,7 +27,6 @@ jobs:
         env:
           TZ: 'Asia/Tokyo'
         run: echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-
       - name: Install Libraries
         run: |
           echo `node -v`
@@ -37,6 +38,11 @@ jobs:
       - name: update news
         run: |
           node App5.js
+      - name: compression images
+        run: |
+          mv src/tmp/*.jpg src/image
+          mogrify -path src/image/ -format jpg src/tmp/*.png
+          mogrify src/image/*.jpg -strip -quality 30 -colorspace sRGB
       - name: Set up Git user
         run: |
           git config user.email "${USERNAME}@users.noreply.github.com"
