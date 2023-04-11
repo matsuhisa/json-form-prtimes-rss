@@ -12,8 +12,7 @@ async function main() {
   console.log("------ 処理開始")
   Promise.all(feed.items.map(item => getRelease(item))).then( results => {
     results.sort((a,b) => new Date(b.day).valueOf() - new Date(a.day).valueOf())
-    console.table(results)
-
+    // console.table(results)
     let jsonData = JSON.stringify({news: results}, null, "  ");
     fs.writeFile("./data/news.json", jsonData).then(() => {
       console.log("------ json 書き込み終わり")
@@ -36,7 +35,7 @@ function getRelease(item) {
       let date = new Date(item.date)
 
       let release = {
-        "day": date.toLocaleDateString(),
+        "day": date.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }),
         "category": "プレスリリース",
         "content": item.title,
         "url": url,
